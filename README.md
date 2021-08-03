@@ -1,2 +1,4 @@
-# aw-mine-express-codesandbox.io
-Created with CodeSandbox
+## Deploy a Basic Node App using Now
+
+This is a demo for an article.
+Article URL will be updated once published.
