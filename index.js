@@ -223,7 +223,7 @@ async function mine(DATA){
         }; 
         
         if (
-            itr >= 100000 * 8 || (end-start) / 1000 >= (60 / (Number(difficulty) || 1))
+            itr >= 100000 * 30 || (end-start) / 1000 >= (60 / (Number(difficulty) || 1))
         ){
             rand_arr    = ''; 
             hex_digest  = `SORRY WE CAN NOT SOLVED LOOP ${ itr }`; 
