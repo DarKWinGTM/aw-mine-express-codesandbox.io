@@ -1,4 +1,5 @@
 const crypto                                = require('crypto');
+const sha256                                = require("js-sha256").sha256;
 const { Api, JsonRpc, Serialize }           = require('eosjs');
 const fetch                                 = require('node-fetch');
 const cpus                                  = require('os').cpus();
@@ -191,24 +192,27 @@ async function mine(DATA){
         combined.set(last_mine_arr, account.length);
         combined.set(rand_arr, account.length + last_mine_arr.length);
 
-        hash = await crypto.createHash('sha256').update( combined.slice(0, 24) ).digest('Uint8Array');
-
+        //  hash = await crypto.createHash('sha256').update( combined.slice(0, 24) ).digest('Uint8Array');
+        hash = await sha256.create().update(combined.slice(0, 24)).digest("Uint8Array");
         hex_digest = toHex(hash);
         
         //  console.log( `${itr} ${hex_digest}\n ` ); 
         
-        if (is_wam){
-            good = hex_digest.substr(0, 4) === '0000';
-        } else {
-            good = hex_digest.substr(0, 6) === '000000';
-        }; 
+        //  if (is_wam){
+        //      good = hex_digest.substr(0, 4) === '0000';
+        //  } else {
+        //      good = hex_digest.substr(0, 6) === '000000';
+        //  }; 
+        good = hex_digest.substr(0, 4) === '0000';
         
         if (good){
-            if (is_wam){
-                last = parseInt(hex_digest.substr(4, 1), 16);
-            } else {
-                last = parseInt(hex_digest.substr(6, 1), 16);
-            }; good &= (last <= difficulty);
+            //  if (is_wam){
+            //      last = parseInt(hex_digest.substr(4, 1), 16);
+            //  } else {
+            //      last = parseInt(hex_digest.substr(6, 1), 16);
+            //  }; good &= (last <= difficulty);
+            last = parseInt(hex_digest.substr(4, 1), 16);
+            good &= last <= difficulty;
         }; 
         
         itr++;
@@ -223,7 +227,7 @@ async function mine(DATA){
         }; 
         
         if (
-            itr >= 100000 * 30 || (end-start) / 1000 >= (60 / (Number(difficulty) * 0.5 || 1))
+            itr >= 100000 * 30 || (end-start) / 1000 >= (20 / (Number(difficulty) * 0.5 || 1))
         ){
             rand_arr    = ''; 
             hex_digest  = `SORRY WE CAN NOT SOLVED LOOP ${ itr }`; 
